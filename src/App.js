@@ -1,23 +1,47 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+  const [userSelection, setUserSelection] = useState(null)
+  const [computerSelection, setComputerSelection] = useState(null)
+  const [result, setResult] = useState(null)
+  const selections = ["rock", "paper", "scissor"]
+  const handelClick = (value) => {
+    setUserSelection(value)
+    generateCompSelection()
+
+  }
+  const generateCompSelection = () => {
+    const randomNum = selections[Math.floor(Math.random() * selections.length)]
+    setComputerSelection(randomNum)
+  }
+  useEffect(() => {
+    checkWin()
+  }, [computerSelection, userSelection])
+
+  const checkWin = () => {
+    const addSelections = userSelection + computerSelection
+    if (addSelections === "scissorpaper" || addSelections === "rockscissor" || addSelections === "paperrock") {
+      setResult("YOU WON!")
+    }
+    else if (userSelection === computerSelection) {
+      setResult("ITS A DRAW!")
+    }
+    else {
+      setResult("COMPUTER WON!")
+    }
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>User Selection: {userSelection}</p>
+      <p>Computer Selection: {computerSelection}</p>
+      {selections.map((select, index) =>
+        <button
+          key={index}
+          onClick={() => handelClick(select)}>{select}
+        </button>
+      )}
+      <p>{result}</p>
     </div>
   );
 }
